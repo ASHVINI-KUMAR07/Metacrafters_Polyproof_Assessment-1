@@ -43,6 +43,10 @@ Welcome to the MyCollectibles NFT Collection project! This repository contains a
 
 The MyCollectibles NFT Collection project focuses on creating and managing a collection of unique Non-Fungible Tokens (NFTs) using the ERC721A standard. The smart contract `MyCollectibles` extends the ERC721A contract and provides functionality for minting NFTs, transferring them, and querying balances.
 
+## Reference
+<img width="1079" alt="Etherscan proof" src="https://github.com/user-attachments/assets/24c1f086-fb8d-4070-a4e7-9e93840e20aa">
+
+
 ## Smart Contract Details
 
 - **Contract:** The `MyCollectibles` contract is deployed and extends the ERC721A contract, serving as the blueprint for the NFT collection.
@@ -76,6 +80,60 @@ Before you begin, ensure you have the required tools and knowledge. Follow the s
 7. **Deposit to FxChain:** Deposit NFTs to the Ethereum FxChain network.
 8. **Check Balance:** Verify the NFT wallet balance on the FxChain network.
 
+### Code for understanding
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.9;
+
+// Import the ERC721A contract, which provides the blueprint for NFTs
+import "erc721a/contracts/ERC721A.sol";
+
+// MyCollectibles contract that follows the ERC721A blueprint
+contract MyCollectibles is ERC721A {
+    // Address of the contract owner
+    address public owner;
+
+    // Maximum number of tokens that can be created
+    uint256 public maxQuantity = 5;
+
+    // Base URL for the NFTs (IPFS base URL)
+    string baseUrl =
+        "https://gateway.pinata.cloud/ipfs/QmQxbHhAu9CpNnMNXnEnphi5ev5fENLrE1xZLxMfSxXrww/";
+
+    // Description shown to users about discovering treasures
+    string public prompt = "Discover the hidden treasures";
+
+    // Constructor: Initialize the contract with a name and symbol for NFTs
+    constructor() ERC721A("MyCollectibles", "MC") {
+        owner = msg.sender;
+    }
+
+    // Modifier: Only the owner can execute this function
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the owner can do this.");
+        _;
+    }
+
+    // Mint new NFTs, only callable by the owner
+    function mint(uint256 quantity) external payable onlyOwner {
+        require(
+            totalSupply() + quantity <= maxQuantity,
+            "You can't create more than 5 NFTs"
+        );
+        _mint(msg.sender, quantity);
+    }
+
+    // Override the baseURI function to return the base URL for NFTs
+    function _baseURI() internal view override returns (string memory) {
+        return baseUrl;
+    }
+
+    // Get the description shown to users
+    function getPromptDescription() external view returns (string memory) {
+        return prompt;
+    }
+}
+# For rest of the code you can hover on SCRIPTS in the navigation.
+
 ## Script Details
 
 - **Batch Mint ERC721A Tokens:** Mint 5 ERC721A tokens on the Ethereum network.
@@ -85,4 +143,4 @@ Before you begin, ensure you have the required tools and knowledge. Follow the s
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
+For any questions or inquiries, feel free to reach out via mail(ashvinikumarcuchd123@gmail.com) or open an issue in the GitHub repository.
